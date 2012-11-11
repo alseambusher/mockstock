@@ -1,4 +1,3 @@
---THIS FILE HAS ALL THE MAJOR SQL QUERIES USED IN THIS PROJECT
 --TABLES 
 --
 create table users(
@@ -32,9 +31,9 @@ create table buy_sell(
 transaction_time timestamp,
 total_price int,
 no_of_shares int,
-isbuy varchar(2),
+isbuy boolean,
 uid int references users(uid),
-cid int references company(cid)
+
 );
 
 create table stock_record(
@@ -65,17 +64,24 @@ where table_schema='mockstock' group by table_name;
 
 -- GET FULL NAME
 select concat(first_name,' ',last_name) as user_name from users;
---GET TIME REMAINING
+--GET TIME STATUS OF THE GAME
 delimiter //
-drop procedure if exists get_time;
-create procedure get_time()
+drop procedure if exists get_time_status;
+create procedure get_time_status()
 begin
-	declare start_time time;
-	declare cur_time time;
-	set start_time=(select start_time from gameconf);
+	declare fetch_time time;
+    declare cur_time time;
+    select start_time into fetch_time from gameconf;
 	set cur_time=curtime();
-	select start_time;
-	select cur_time;
-	--select if(cur_time()>start_time,(select subtime(cur_time(),) remain) ,(select subtime(start_time,cur_time)));
+    if fetch_time-cur_time<0 and addtime(fetch_time,'02:00:00')-cur_time>0
+        then
+        select "Game ends in" as game_status,subtime(addtime(fetch_time,'02:00:00'),cur_time) as time;
+    elseif fetch_time-cur_time>0
+        then
+        select "Game starts in" as game_status,subtime(fetch_time,cur_time) as time;
+    else
+        select "Game Over" as game_status;
+    end if;
 end
 //
+delimiter ;

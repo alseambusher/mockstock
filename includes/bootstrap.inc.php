@@ -9,5 +9,9 @@ echo "<script type='text/javascript' src='".$bootstrap."js/bootstrap.js'></scrip
 echo "<script type='text/javascript' src='".$bootstrap."js/bootstrap-popover.js'></script>";
 echo "<script type='text/javascript' src='".$bootstrap."js/bootstrap-modal.js'></script>";
 echo "<script type='text/javascript' src='".$bootstrap."js/bootstrap-typeahead.js'></script>";
+echo "<script type='text/javascript' src='".$config['base_url']."/highcharts/js/highcharts.js'></script>";
+echo "<script type='text/javascript' src='".$config['base_url']."/highcharts/js/modules/exporting.js'></script>";
+echo "<script type='text/javascript' src='".$config['base_url']."/scripts/js/system.js'></script>";
+echo '<link href="'.$config['base_url'].'/css/style.css" rel="stylesheet">';
 ?>
 <link rel="shortcut icon" href="" />

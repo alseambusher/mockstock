@@ -8,3 +8,10 @@
    -moz-box-shadow: 0px 0px 5px rgba(0,0,0,.8);
    box-shadow: 0px 0px 5px rgba(0,0,0,.8);
 }
+.board{
+    background-color:white;
+    min-height:500px;
+-webkit-box-shadow: 0px 0px 15px rgba(0,0,0,.8);
+   -moz-box-shadow: 0px 0px 15px rgba(0,0,0,.8);
+   box-shadow: 0px 0px 15px rgba(0,0,0,.8);
+}

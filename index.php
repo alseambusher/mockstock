@@ -37,8 +37,7 @@
 			<input type="password" name="password" placeholder="Password" style="font-size:11pt;height:18px;">
 			<button type="submit" style="margin-top:-3px;" class='btn btn-success'>Login</button>
 		  </form>
-		<button class='btn btn-primary' onclick='load_form_modal("Quick Signup","scripts/php/accounts.php?action=signup","<input name=\"first_name\" type=\"text\" placeholder=\"First Name\"/> eg: John<br><input name=\"last_name\" type=\"text\" placeholder=\"Last Name\"/> eg: Smith<br><input name=\"email\" type=\"text\" placeholder=\"email\"/> eg: john@example.com<br><input name=\"password\"type=\"password\" placeholder=\"password\"/> Password should have a minimum of 6 characters<br><input name=\"confirm_password\"type=\"password\" placeholder=\"confirm password\"/><br><input type=\"text\" placeholder=\"age\"/ name=\"age\"><br> Note that your age is only for our statistcs and will not be shared with others<br><br><input name=\"terms\" value=\"1\" type=\"checkbox\"/> &nbsp;&nbsp;&nbsp;I agree to terms and conditions","Signup");'>Signup</button>
-
+        <button class='btn btn-primary' onclick='load_form_modal("Quick Signup","scripts/php/accounts.php?action=signup","<input name=\"first_name\" type=\"text\" placeholder=\"First Name\"/> eg: John<br><input name=\"last_name\" type=\"text\" placeholder=\"Last Name\"/> eg: Smith<br><input name=\"email\" type=\"text\" placeholder=\"email\"/> eg: john@example.com<br><input name=\"password\"type=\"password\" placeholder=\"password\"/> Password should have a minimum of 6 characters<br><input name=\"confirm_password\"type=\"password\" placeholder=\"confirm password\"/><br><input type=\"text\" placeholder=\"age\"/ name=\"age\"><br> Note that your age is only for our statistcs and will not be shared with others<br><br><input name=\"terms\" value=\"1\" type=\"checkbox\"/> &nbsp;&nbsp;&nbsp;I agree to terms and conditions","Signup");'>Signup</button>
 
 		  <?}else{?>
 		<!--<li><a href="'.$this->config->base_url().index_page().'/welcome/logout"><i class="icon-off"></i> Logout</a></li>';-->
@@ -55,27 +54,42 @@
             </li>
 	    <?}?>
           </ul>
-          
-          
+
+
         </div>
       </div>
     </div>
     <!-- Navigation bar done -->
 
 <br><br>
-<div class="container">
-<?if(!isLogin()&&game_started()){//take care of end time being '00:00:00'?>
-<center><h1 style='font-size:10em; line-height:2em;'>
-Time remaining <a id="timer"><?echo end_time();?></a>
-<script>setTimeout("update_timer()",0);</script>
-</h1></center>
-<?}else if(!game_started()){?>
-<center><h1 style='font-size:10em; line-height:2em;'>
-Game starts in <a id="timer"><?echo start_time();?></a>
-<script>setTimeout("update_timer()",0);</script>
-</h1></center>
+<div class="container" >
+<?if((!isLogin())||(!game_started())){
+    $time_status=get_time_status();
+?>
+    <center>
+        <h1 style='font-size:10em; line-height:2em;'>
+            <?echo $time_status['game_status'];?>
+            <?if($time_status['game_status']!="Game Over"){
+                echo '<a id="timer">'.$time_status['time'].'</a>';
+                echo '<script>setTimeout("update_timer()",0);</script>';
+            }?>
+        </h1>
+    </center>
 <?}else{?>
 <!-- everything should be here -->
+<div class="board">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <ul class="nav">
+            <li class="active" id="dashboard_button"><a href="#">Dashboard</a></li>
+            <li><a href="#">Ranking</a></li>
+            <li><a href="#">Transactions</a></li>
+            </ul>
+        </div>
+    </div>
+<!-- make this async-->
+    <?include("includes/dashboard.inc.php");?>
+</div>
 <?}?>
 </div>
 <!-- container closed -->
