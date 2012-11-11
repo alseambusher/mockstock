@@ -77,9 +77,12 @@ function my_investments_chart(){
 </script>
 <script>
 function dashboard_update(){
+    //TODO
+    setTimeout("dashboard_update();",10000);
 }
 </script>
-<div>
-Cash in bank: <a>1000000</a>Rs
+<div style="background-color:#dddddd;padding:10px;">
+<h3>Cash in bank : <a>1000000</a> Rs<br>
+Cash invested: <a>0</a> Rs</h3>
 </div>
 <div id="container" style="width: 800px; height: 400px; margin-left: 0 "></div>

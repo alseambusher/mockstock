@@ -90,6 +90,7 @@
 <!-- make this async-->
     <?include("includes/dashboard.inc.php");?>
 </div>
+    <?include("includes/footer.inc.php");?>
 <?}?>
 </div>
 <!-- container closed -->
