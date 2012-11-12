@@ -90,10 +90,10 @@
 <!-- make this async-->
     <?include("includes/dashboard.inc.php");?>
 </div>
-    <?include("includes/footer.inc.php");?>
-<?}?>
 </div>
+    <?include("includes/footer.inc.php");?>
 <!-- container closed -->
+<?}?>
 <!-- this is the modal for everything without a form-->
 <div class="modal hide fade" id="modal">
   <div class="modal-header">

@@ -22,9 +22,8 @@ worth varchar(10) --this is not used anywhere hence varchar is enough
 -- time is in HH:MM:SS format
 create table news(
 time time not null,
-company_news text,
-general_news text,
-check((company_news is not null) or (general_news is not null))
+description text,
+title varchar(100)
 );
 
 create table buy_sell(
@@ -106,3 +105,6 @@ begin
     insert into news select * from news_history;
     delete from news_history;
 end
+
+--get current news
+select news.* from news,gameconf where addtime(gameconf.start_time,news.time)<curtime() and addtime(gameconf.start_time,news.time)>subtime(curtime(),'00:05:00');

@@ -9,24 +9,6 @@ function my_investments_chart(){
     my_investments= new Highcharts.Chart({
         chart: {
             renderTo: 'container',
-            /*events:{
-                load:function(){
-                    setInterval(function(){
-                        var xhr=new XMLHttpRequest();
-                        if(xhr){
-                            xhr.onreadystatechange=function(){
-                                if(xhr.readyState==4){
-                                    if(xhr.status==200){
-                                        this.series=eval(xhr.responseText);
-                                    }
-                                }
-                            }
-                            xhr.open('GET','scripts/php/charts.php?chart=my_investments');
-                            xhr.send(null);
-                        }
-                    },1000);
-                }
-        },*/
             type: 'line',
             marginRight: 130,
             marginBottom: 25
@@ -47,7 +29,7 @@ function my_investments_chart(){
         },
         yAxis: {
             title: {
-                text: 'Worth'
+                text: 'Price per Share'
             },
             plotLines: [{
                 value: 0,
@@ -85,6 +67,17 @@ function dashboard_update(){
                     my_investments_data=eval(xhr_my_inverstments.responseText)[1];
                     my_investments_categories=eval(xhr_my_inverstments.responseText)[0];
                     my_investments_chart();
+                    document.getElementById("investments_table").innerHTML="<tr><th>Company</th><th>Price per Share</th></tr>";
+                    for(var i=0;i<my_investments_data.length;i++){
+                        var tr=document.createElement("tr");
+                        var td=document.createElement("td");
+                        td.innerHTML=my_investments_data[i].name;
+                        var td2=document.createElement("td");
+                        td2.innerHTML=my_investments_data[i].data[my_investments_data[i].data.length-1];
+                        tr.appendChild(td);
+                        tr.appendChild(td2);
+                        document.getElementById("investments_table").appendChild(tr);
+                    }
                 }
             }
         }
@@ -92,14 +85,12 @@ function dashboard_update(){
         xhr_my_inverstments.send(null);
     }
     //TODO worth not implemented on async_data.php
-    //update money with me
+    //update money with me and money invested
     var xhr_money_worth=new XMLHttpRequest();
     if(xhr_money_worth){
         xhr_money_worth.onreadystatechange=function(){
             if(xhr_money_worth.readyState==4){
                 if(xhr_money_worth.status==200){
-                    console.log("alse");
-                    console.log(xhr_money_worth.responseText);
                     document.getElementById("my_cash").innerHTML=eval(xhr_money_worth.responseText)[0];
                     document.getElementById("my_worth").innerHTML=eval(xhr_money_worth.responseText)[1];
                 }
@@ -112,7 +103,19 @@ function dashboard_update(){
 }
 </script>
 <div style="background-color:#dddddd;padding:10px;">
-<h3>Cash in bank : <a id="my_cash">1000000</a> Rs<br>
+<h3>Cash in bank : <a id="my_cash">0</a> Rs<br>
 Cash invested: <a id="my_worth">0</a> Rs</h3>
 </div>
-<div id="container" style="width: 800px; height: 400px; margin-left: 0 "></div>
+<div style="padding-left:10px;padding-right:50px;">
+<table class="table">
+    <tr>
+        <td><div id="container" style="width: 800px; height: 400px; margin-left: 0 "></div></td>
+        <td >
+            <table class="table" id="investments_table" >
+                <tr><th>Company</th><th>Price per Share</th></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</div>
+
