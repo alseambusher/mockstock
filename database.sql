@@ -64,8 +64,8 @@ where table_schema='mockstock' group by table_name;
 
 -- GET FULL NAME
 select concat(first_name,' ',last_name) as user_name from users;
+
 --GET TIME STATUS OF THE GAME
-delimiter //
 drop procedure if exists get_time_status;
 create procedure get_time_status()
 begin
@@ -73,9 +73,9 @@ begin
     declare cur_time time;
     select start_time into fetch_time from gameconf;
 	set cur_time=curtime();
-    if fetch_time-cur_time<0 and addtime(fetch_time,'02:00:00')-cur_time>0
+    if fetch_time-cur_time<0 and addtime(fetch_time,'01:00:00')-cur_time>0
         then
-        select "Game ends in" as game_status,subtime(addtime(fetch_time,'02:00:00'),cur_time) as time;
+        select "Game ends in" as game_status,subtime(addtime(fetch_time,'01:00:00'),cur_time) as time;
     elseif fetch_time-cur_time>0
         then
         select "Game starts in" as game_status,subtime(fetch_time,cur_time) as time;
@@ -83,5 +83,26 @@ begin
         select "Game Over" as game_status;
     end if;
 end
-//
-delimiter ;
+
+
+-- EVENT which deletes useless news and puts it to a buffer news;
+SET GLOBAL event_scheduler = ON;
+SET GLOBAL event_scheduler = OFF;
+create event speedup_news
+on schedule every 5 minute
+do begin
+    declare fetch_time time;
+    select start_time into fetch_time from gameconf;
+    insert into news_history select * from news where addtime(fetch_time,addtime(time,'00:05:00'))<curtime();
+    delete from news where addtime(fetch_time,addtime(time,'00:05:00'))<curtime();
+end
+alter event speedup_news disable;
+alter event speedup_news enable;
+
+
+--procedure to recover news from news_history
+create procedure recover_news()
+begin
+    insert into news select * from news_history;
+    delete from news_history;
+end
