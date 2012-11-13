@@ -103,7 +103,7 @@ function dashboard_update(){
 }
 </script>
 <div style="background-color:#dddddd;padding:10px;">
-<h3>Cash in bank : <a id="my_cash">0</a> Rs<br>
+<h3>Cash in bank &nbsp;: <a id="my_cash">0</a> Rs<br>
 Cash invested: <a id="my_worth">0</a> Rs</h3>
 </div>
 <div style="padding-left:10px;padding-right:50px;">

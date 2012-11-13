@@ -108,3 +108,6 @@ end
 
 --get current news
 select news.* from news,gameconf where addtime(gameconf.start_time,news.time)<curtime() and addtime(gameconf.start_time,news.time)>subtime(curtime(),'00:05:00');
+
+--get invested money
+select sum(owns_shares_of.no_of_shares*stock_record.price_per_share) as investment from owns_shares_of,stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.uid=$_SESSION['id'] and owns_shares_of.cid=stock_record.cid;

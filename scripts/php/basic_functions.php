@@ -8,6 +8,7 @@ get_username(uid=-1)
 get_user_data(columns,$uid=-1)
 game_started()
 get_time_status()
+get_invested_money($uid=-1)
 */
 function get_user_id($email){
 	include("connect.php");
@@ -65,5 +66,17 @@ function get_time_status(){
     $query=mysqli_query($connect,"call get_time_status()");
     while($row=mysqli_fetch_array($query))
         return $row;
+}
+function get_invested_money($uid=-1){
+    include("connect.php");
+    if($uid==-1){
+        session_start();
+        $uid=$_SESSION['id'];
+    }
+    $query=mysqli_query($connect,"select sum(owns_shares_of.no_of_shares*stock_record.price_per_share) as investment from owns_shares_of,stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.uid=".$uid." and owns_shares_of.cid=stock_record.cid");
+    while($row=mysqli_fetch_array($query))
+        if($row['investment'])
+            return $row['investment'];
+    return 0;
 }
 ?>
