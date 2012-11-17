@@ -2,7 +2,7 @@
 include("basic_functions.php");
 switch($_GET['action']){
     //TODO THIS IS INCOMPLETE
-case "my_cash": $money=get_user_data(Array('money'));echo "['".$money['money']."','".get_invested_money()."']";break;
+case "my_cash": $money=get_user_data(Array('money'));echo $money['money'].",".get_invested_money();break;
 case "get_news": echo get_news();break;
 }
 function get_news(){

@@ -91,8 +91,8 @@ function dashboard_update(){
         xhr_money_worth.onreadystatechange=function(){
             if(xhr_money_worth.readyState==4){
                 if(xhr_money_worth.status==200){
-                    document.getElementById("my_cash").innerHTML=eval(xhr_money_worth.responseText)[0];
-                    document.getElementById("my_worth").innerHTML=eval(xhr_money_worth.responseText)[1];
+                    document.getElementById("my_cash").innerHTML=xhr_money_worth.responseText.split(',')[0];
+                    document.getElementById("my_worth").innerHTML=xhr_money_worth.responseText.split(',')[1];
                 }
             }
         }
@@ -106,7 +106,6 @@ function dashboard_update(){
 <h3>Cash in bank &nbsp;: <a id="my_cash">0</a> Rs<br>
 Cash invested: <a id="my_worth">0</a> Rs</h3>
 </div>
-<div style="padding-left:10px;padding-right:50px;">
 <table class="table">
     <tr>
         <td><div id="container" style="width: 800px; height: 400px; margin-left: 0 "></div></td>
@@ -117,5 +116,3 @@ Cash invested: <a id="my_worth">0</a> Rs</h3>
         </td>
     </tr>
 </table>
-</div>
-

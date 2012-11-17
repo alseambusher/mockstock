@@ -111,3 +111,7 @@ select news.* from news,gameconf where addtime(gameconf.start_time,news.time)<cu
 
 --get invested money
 select sum(owns_shares_of.no_of_shares*stock_record.price_per_share) as investment from owns_shares_of,stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.uid=$_SESSION['id'] and owns_shares_of.cid=stock_record.cid;
+
+--rankings
+select sum(owns_shares_of.no_of_shares*stock_record.price_per_share)+users.money as worth, concat(users.first_name,' ',users.last_name) as full_name from owns_shares_of,stock_record,gameconf,users where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.cid=stock_record.cid 
+and owns_shares_of.uid=users.uid group by users.uid order by worth desc;

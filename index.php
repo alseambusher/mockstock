@@ -77,18 +77,22 @@
     </center>
 <?}else{?>
 <!-- everything should be here -->
+<div style="padding-left:10px;padding-right:50px;">
 <div class="board">
     <div class="navbar">
         <div class="navbar-inner">
             <ul class="nav">
-            <li class="active" id="dashboard_button"><a href="#">Dashboard</a></li>
-            <li><a href="#">Ranking</a></li>
-            <li><a href="#">Transactions</a></li>
+            <li class="active" id="dashboard_button" onclick="switch_window('dashboard');"><a href="#">Dashboard</a></li>
+            <li id="ranking_button" onclick="switch_window('ranking');"><a href="#">Ranking</a></li>
+            <li id="market_button" onclick="switch_window('market');"><a href="#">Market</a></li>
             </ul>
         </div>
     </div>
 <!-- make this async-->
-    <?include("includes/dashboard.inc.php");?>
+    <div id="dashboard"><?include("includes/dashboard.inc.php");?></div>
+    <div id="ranking"><?include("includes/ranking.inc.php");?></div>
+    <div id="market">MARKEMARKEMARKEMARKEMARKEMARKEMARKEMARKETTTTTTTT</div>
+</div>
 </div>
 </div>
     <?include("includes/footer.inc.php");?>
