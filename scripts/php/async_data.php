@@ -1,9 +1,10 @@
 <?
 include("basic_functions.php");
 switch($_GET['action']){
-    //TODO THIS IS INCOMPLETE
 case "my_cash": $money=get_user_data(Array('money'));echo $money['money'].",".get_invested_money();break;
 case "get_news": echo get_news();break;
+    //TODO THIS IS INCOMPLETE
+case "rank_table": return rank_table();break;
 }
 function get_news(){
     include("connect.php");
@@ -16,5 +17,8 @@ function get_news(){
         array_push($result,$description);
     }
     return json_encode($result);
+}
+function rank_table(){
+    return 0;
 }
 ?>

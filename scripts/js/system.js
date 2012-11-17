@@ -3,5 +3,6 @@ window.onload=function(){
     dashboard_update();
     update_news();
     news_parser();
+    ranks();
     switch_window('dashboard');
 }
