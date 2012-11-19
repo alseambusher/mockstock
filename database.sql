@@ -115,3 +115,12 @@ select sum(owns_shares_of.no_of_shares*stock_record.price_per_share) as investme
 --rankings
 select sum(owns_shares_of.no_of_shares*stock_record.price_per_share)+users.money as worth, concat(users.first_name,' ',users.last_name) as full_name from owns_shares_of,stock_record,gameconf,users where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.cid=stock_record.cid 
 and owns_shares_of.uid=users.uid group by users.uid order by worth desc;
+
+--this will update the tables once user buys shares 
+--Things which should happen when i insert into buy_sell
+--update or insert into owns_shares_of
+--update money in users
+DELIMITER //
+create trigger transaction after insert 
+on buy_sell
+for each row begin

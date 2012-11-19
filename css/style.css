@@ -1,4 +1,6 @@
-body{overflow-y:scroll;}
+body{
+overflow-y:scroll;
+}
 .shadow{
 -webkit-box-shadow: 0px 0px 20px rgba(0,0,0,.8);
    -moz-box-shadow: 0px 0px 20px rgba(0,0,0,.8);
@@ -10,6 +12,7 @@ body{overflow-y:scroll;}
    box-shadow: 0px 0px 5px rgba(0,0,0,.8);
 }
 .board{
+background: url(images/straws.png) repeat;
     background-color:white;
     padding-bottom:100px;
     min-height:500px;
