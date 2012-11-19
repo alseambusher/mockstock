@@ -93,7 +93,28 @@
     <div id="dashboard"><?include("includes/dashboard.inc.php");?></div>
     <div id="market">MARKEMARKEMARKEMARKEMARKEMARKEMARKEMARKETTTTTTTT</div>
     <div id="companies"><?include("includes/companies.inc.php");?></div>
-    <div id="ranking"><?include("includes/ranking.inc.php");?></div>
+    <div id="ranking">
+        <script>
+        function ranks(){
+            var xhr=new XMLHttpRequest();
+            if(xhr){
+                xhr.onreadystatechange=function(){
+                    if(xhr.readyState==4){
+                        if(xhr.status==200){
+                            document.getElementById("rank_table").innerHTML=xhr.responseText;
+                        }
+                    }
+                }
+                xhr.open("GET","scripts/php/async_data.php?action=rank_table");
+                xhr.send(null);
+            }
+            setTimeout("ranks();",5000);
+        }
+        </script>
+        <div id="rank_table">
+        </div>
+    </div>
+<!-- rank ends here -->
 </div>
 </div>
 </div>
