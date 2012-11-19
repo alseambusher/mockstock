@@ -119,8 +119,8 @@ select users.money cash_in_hand,sum(owns_shares_of.no_of_shares*stock_record.pri
 select * from company where name like "%a%" and company_type like "%a%" and cid in (select cid from company_locations where location like "%a%");
 
 --stock rates
-select * from stock_record,gameconf where addtime(bu 
-
+--TODO this will work only after first 5 minutes
+select new.price_per_share new_price,(old.price_per_share-new.price_per_share)/100,company.name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid ;
 --this will update the tables once user buys shares 
 --Things which should happen when i insert into buy_sell
 --update or insert into owns_shares_of

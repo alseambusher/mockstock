@@ -3,9 +3,10 @@ include("basic_functions.php");
 switch($_GET['action']){
 case "my_cash": $money=get_user_data(Array('money'));echo $money['money'].",".get_invested_money();break;
 case "get_news": echo get_news();break;
-case  "get_companies":get_companies();break;
-    //TODO THIS IS INCOMPLETE
+case "get_companies":get_companies();break;
 case "rank_table": return rank_table();break;
+//TODO fix for first 5 minutes
+case "get_stock_news":get_stock_news();break;
 }
 function get_news(){
     include("connect.php");
@@ -49,5 +50,16 @@ function rank_table(){
         $rank=$rank+1;
     }
     echo '</table>';
+}
+function get_stock_news(){
+    include("connect.php");
+    $query=mysqli_query($connect,"select new.price_per_share new_price,(old.price_per_share-new.price_per_share)/100 as percent,company.name name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid") or die ("cant connect");
+    $result=array();
+    while($row=mysqli_fetch_array($query)){
+        array_push($result,$row['name']);
+        array_push($result,$row['new_price']);
+        array_push($result,$row['percent']);
+    }
+    echo json_encode($result);
 }
 ?>

@@ -7,6 +7,7 @@ window.onload=function(){
     update_news();
     news_parser();
     stock_rates_parser();
+    update_stock_news();
     ranks();
     switch_window(document.getElementById("url_tab").value);
     filter_company();
