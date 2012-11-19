@@ -8,7 +8,7 @@ var my_investments_categories=['Loading'];
 function my_investments_chart(){
     my_investments= new Highcharts.Chart({
         chart: {
-            renderTo: 'container',
+            renderTo: 'my_investments_chart',
             type: 'line',
             marginRight: 130,
             marginBottom: 25
@@ -51,9 +51,130 @@ function my_investments_chart(){
             y: 100,
             borderWidth: 0
         },
-        series:my_investments_data
+        series:my_investments_data,
+        exporting: {
+            enabled: false
+        }
     });
 }
+function my_worth_chart(){
+    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
+            return {
+                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+                stops: [
+                    [0, color],
+                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                ]
+            };
+        });
+    var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'my_worth_pie',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'My Assets'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    ['Firefox',   45.0],
+                    ['IE',       26.8],
+                    {
+                        name: 'Chrome',
+                        y: 12.8,
+                        sliced: true,
+                        selected: true
+                    },
+                    ['Safari',    8.5],
+                    ['Opera',     6.2],
+                    ['Others',   0.7]
+                ]
+            }],
+            credits:{
+                enabled:false
+            },
+            exporting: {
+                enabled: false
+            }
+        });
+}
+function global_worth_chart(){
+    var chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'global_worth_pie',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Global Assets'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    ['Firefox',   45.0],
+                    ['IE',       26.8],
+                    {
+                        name: 'Chrome',
+                        y: 12.8,
+                        sliced: true,
+                        selected: true
+                    },
+                    ['Safari',    8.5],
+                    ['Opera',     6.2],
+                    ['Others',   0.7]
+                ]
+            }],
+            credits:{
+                enabled:false
+            },
+            exporting: {
+                enabled: false
+            }
+        });
+}
+
 function dashboard_update(){
     //TODO
     //make a async request too charts.php and update data
@@ -108,11 +229,17 @@ Cash invested: <a id="my_worth">0</a> Rs</h3>
 </div>
 <table class="table">
     <tr>
-        <td><div id="container" style="width: 800px; height: 400px; margin-left: 0 "></div></td>
+        <td><div id="my_investments_chart" style="width: 800px; height: 400px; margin-left: 0 "></div></td>
         <td >
             <table class="table" id="investments_table" >
                 <tr><th>Company</th><th>Price per Share</th></tr>
             </table>
         </td>
     </tr>
+</table>
+<table class="table">
+<tr>
+    <td><span id="my_worth_pie" style="width: 500px; height: 400px; margin-left: 0;display:inline; "></span></td>
+    <td><span id="global_worth_pie" style="width: 500px; height: 400px; display:inline; "></span></td>
+</tr>
 </table>

@@ -35,7 +35,7 @@ function update_timer(){
 	setTimeout("update_timer();",1000);
 }
 function switch_window(id){
-    var elements=['dashboard','ranking','market'];
+    var elements=['dashboard','ranking','market','companies'];
     for(var i=0;i<elements.length;i++){
         $("#"+elements[i]).fadeOut(100);
         document.getElementById(elements[i]+"_button").setAttribute("class","");

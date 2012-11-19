@@ -19,7 +19,7 @@
 </style>
 </head>
 <body>
-
+<input type="hidden" value="<?if(isset($_GET['tab'])) echo $_GET['tab'];else echo "dashboard";?>" id="url_tab">
 
 <div class="navbar navbar-fixed-top shadow">
       <div class="navbar-inner">
@@ -83,15 +83,17 @@
         <div class="navbar-inner">
             <ul class="nav">
             <li class="active" id="dashboard_button" onclick="switch_window('dashboard');"><a href="#">Dashboard</a></li>
-            <li id="ranking_button" onclick="switch_window('ranking');"><a href="#">Ranking</a></li>
+            <li id="companies_button" onclick="switch_window('companies');"><a href="#">Companies</a></li>
             <li id="market_button" onclick="switch_window('market');"><a href="#">Market</a></li>
+            <li id="ranking_button" onclick="switch_window('ranking');"><a href="#">Ranking</a></li>
             </ul>
         </div>
     </div>
 <!-- make this async-->
     <div id="dashboard"><?include("includes/dashboard.inc.php");?></div>
-    <div id="ranking"><?include("includes/ranking.inc.php");?></div>
     <div id="market">MARKEMARKEMARKEMARKEMARKEMARKEMARKEMARKETTTTTTTT</div>
+    <div id="companies"><?include("includes/companies.inc.php");?></div>
+    <div id="ranking"><?include("includes/ranking.inc.php");?></div>
 </div>
 </div>
 </div>
