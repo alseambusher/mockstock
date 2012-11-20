@@ -5,7 +5,6 @@ case "my_cash": $money=get_user_data(Array('money'));echo $money['money'].",".ge
 case "get_news": echo get_news();break;
 case "get_companies":get_companies();break;
 case "rank_table": return rank_table();break;
-//TODO fix for first 5 minutes
 case "get_stock_news":get_stock_news();break;
 }
 function get_news(){
@@ -33,9 +32,12 @@ function get_companies(){
         echo "<p>".$row['history']."</p>";
         echo "<strong>Company Centers</strong><br>";
         $query2=mysqli_query($connect,"select location from company_locations where cid=".$row['cid']);
-        while($row2=mysqli_fetch_array($query2)){
+        while($row2=mysqli_fetch_array($query2))
             echo $row2['location']."<br>";
-        }
+        echo "<strong>News</strong><br>";
+        $query3=mysqli_query($connect,"select news.*,addtime(news.time,gameconf.start_time) game_time from news,gameconf where (description like '%".$row['name']."%' or title like '%".$row['name']."%') and time<subtime(curtime(),gameconf.start_time)");
+        while($row2=mysqli_fetch_array($query3))
+            echo $row2['game_time'].": <strong>".$row2['title']."</strong><br>".$row2['description']."<br>";
         echo "<hr/>";
     }
 }
@@ -53,7 +55,7 @@ function rank_table(){
 }
 function get_stock_news(){
     include("connect.php");
-    $query=mysqli_query($connect,"select new.price_per_share new_price,(old.price_per_share-new.price_per_share)/100 as percent,company.name name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid") or die ("cant connect");
+    $query=mysqli_query($connect,"call stock_rates();") or die ("cant connect");
     $result=array();
     while($row=mysqli_fetch_array($query)){
         array_push($result,$row['name']);

@@ -46,3 +46,19 @@ background: url(../images/straws.png) repeat;
 }
 .dummy_nav{
 }
+.arrow-up {
+	width: 0; 
+	height: 0; 
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	border-bottom: 15px solid green;
+    display:inline-block;
+}
+.arrow-down {
+	width: 0; 
+	height: 0; 
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+    display:inline-block;
+	border-top: 15px solid red;
+}

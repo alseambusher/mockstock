@@ -120,7 +120,21 @@ select * from company where name like "%a%" and company_type like "%a%" and cid 
 
 --stock rates
 --TODO this will work only after first 5 minutes
-select new.price_per_share new_price,(old.price_per_share-new.price_per_share)/100,company.name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid ;
+--soluion create a procedure for this
+delimiter //
+create procedure stock_rates()
+begin
+    declare fetch_time time;
+    select start_time into fetch_time from gameconf;
+    if curtime()<addtime(fetch_time,'00:05:00') then
+        select stock_record.price_per_share as new_price,0 as percent,company.name from gameconf,stock_record inner join company on company.cid=stock_record.cid where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00');
+    else
+        select new.price_per_share new_price,((old.price_per_share-new.price_per_share)/old.price_per_share)*100 as percent ,company.name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid ;
+    end if;
+end
+//
+delimiter ;
+
 --this will update the tables once user buys shares 
 --Things which should happen when i insert into buy_sell
 --update or insert into owns_shares_of

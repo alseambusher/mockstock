@@ -17,9 +17,9 @@ function stock_rates_parser(){
     $('#stock_rates').fadeOut(0);
     var output=stock_rates[stock_pointer%stock_rates.length]+": Rs."+stock_rates[(stock_pointer+1)%stock_rates.length];
     if(stock_rates[(stock_pointer+2)%stock_rates.length]<0)
-        output=output+" <strong style='font-weight:bold;color:red;font-size:1.8em'>&#8595;</strong>"+stock_rates[(stock_pointer+2)%stock_rates.length]+"%";
+        output=output+" "+stock_rates[(stock_pointer+2)%stock_rates.length]+"% <div class='arrow-down'></div>";
     else
-        output=output+" <strong style='font-weight:bold;color:green;font-size:1.8em'>&#8593;</strong>"+stock_rates[(stock_pointer+2)%stock_rates.length]+"%";
+        output=output+" "+stock_rates[(stock_pointer+2)%stock_rates.length]+"% <div class='arrow-up'></div>";
     document.getElementById("stock_rates").innerHTML=output;
     $('#stock_rates').fadeIn(500);
     stock_pointer+=3;
