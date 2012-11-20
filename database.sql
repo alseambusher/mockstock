@@ -112,7 +112,8 @@ select news.* from news,gameconf where addtime(gameconf.start_time,news.time)<cu
 --get invested money
 select sum(owns_shares_of.no_of_shares*stock_record.price_per_share) as investment from owns_shares_of,stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.uid=$_SESSION['id'] and owns_shares_of.cid=stock_record.cid;
 
---rankings
+--ranking
+create view ranking as
 select users.money cash_in_hand,sum(owns_shares_of.no_of_shares*stock_record.price_per_share) cash_invested,sum(owns_shares_of.no_of_shares*stock_record.price_per_share)+users.money as total, concat(users.first_name,' ',users.last_name) as full_name from owns_shares_of,stock_record,gameconf,users where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and owns_shares_of.cid=stock_record.cid and owns_shares_of.uid=users.uid group by users.uid order by total desc;
 
 --list companies
@@ -139,8 +140,31 @@ delimiter ;
 --Things which should happen when i insert into buy_sell
 --update or insert into owns_shares_of
 --update money in users
---TODO
+--TODO TEST THIS
 DELIMITER //
-create trigger transaction after insert 
-on buy_sell
-for each row begin
+create trigger transaction after insert on buy_sell
+    for each row
+        begin
+        declare already_owned_cid int;
+        declare cost_involved int;
+        select (new.no_of_shares*stock_record.price_per_share) into cost_involved from stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00');
+        select cid into already_owned_cid from owns_shares_of where cid=new.cid and uid=new.uid;
+        if already_owned_cid is not null
+            then
+                if new.isbuy=0 then
+                    update owns_shares_of set no_of_shares=no_of_shares-new.no_of_shares where owns_shares_of.uid=new.uid and owns_shares_of.cid=new.cid;
+                    update users set money=money+cost_involved where uid=new.uid;
+                else
+                    update owns_shares_of set no_of_shares=no_of_shares+new.no_of_shares where owns_shares_of.uid=new.uid and owns_shares_of.cid=new.cid;
+                    update users set money=money-cost_involved where uid=new.uid;
+                end if;
+            else
+                insert into owns_shares_of values(new.uid,new.cid,new.no_of_shares);
+                update users set money=money-cost_involved where uid=new.uid;
+        end if;
+    end;
+//
+delimiter ;
+
+--number of shares left of a company
+select company.name,company.no_shares-sum(owns_shares_of.no_of_shares) as shares_left from company,owns_shares_of where company.cid=1 and owns_shares_of.cid=company.cid;

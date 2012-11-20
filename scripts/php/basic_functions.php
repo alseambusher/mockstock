@@ -9,6 +9,7 @@ get_user_data(columns,$uid=-1)
 game_started()
 get_time_status()
 get_invested_money($uid=-1)
+get_market_companies();//used only in market and is not usable anywhere else
 */
 function get_user_id($email){
 	include("connect.php");
@@ -77,5 +78,14 @@ function get_invested_money($uid=-1){
     while($row=mysqli_fetch_array($query))
         return $row['investment'];
     return 0;
+}
+function get_market_companies(){
+    include("connect.php");
+    $query=mysqli_query($connect,"select cid,name from company order by name");
+    while($row=mysqli_fetch_array($query))
+            echo "<li><a id='market_company_".$row['cid']."' rel='popover' data-content='Loading...' title='".$row['name']."' onmouseover='company_onmouseover(\"".$row['cid']."\");' href='#'>".$row['name']."</a></li>";
+
+}
+function console_log($msg){
 }
 ?>

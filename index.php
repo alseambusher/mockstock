@@ -47,7 +47,8 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Account settings</a></li>
+<?$user=get_user_data(Array('first_name','last_name','email'));?>
+<li><a href="#"onclick='load_form_modal("Account settings","scripts/php/accounts.php?action=update","<input name=\"first_name\" type=\"text\" placeholder=\"First Name\" value=\"<?echo $user['first_name'];?>\"/> eg: John<br><input name=\"last_name\" type=\"text\" placeholder=\"Last Name\"value=\"<?echo $user['last_name'];?>\"/> eg: Smith<br><input name=\"email\" type=\"text\" placeholder=\"email\"value=\"<?echo $user['email'];?>\"/> eg: john@example.com<br><input name=\"password\"type=\"password\" placeholder=\"password\"/> Password should have a minimum of 6 characters<br><input name=\"confirm_password\"type=\"password\" placeholder=\"confirm password\"/><br>","Update");'>Account settings</a></li>
                 <li><a href="#">Help</a></li>
                 <li><a href="scripts/php/accounts.php?action=logout">Logout</a></li>
               </ul>
@@ -91,7 +92,7 @@
     </div>
 <!-- make this async-->
     <div id="dashboard"><?include("includes/dashboard.inc.php");?></div>
-    <div id="market">MARKEMARKEMARKEMARKEMARKEMARKEMARKEMARKETTTTTTTT</div>
+    <div id="market"><?include("includes/market.inc.php");?></div>
     <div id="companies"><?include("includes/companies.inc.php");?></div>
     <div id="ranking">
         <script>

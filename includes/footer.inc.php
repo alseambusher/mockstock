@@ -43,7 +43,7 @@ function update_news(){
         xhr_news.open("GET","scripts/php/async_data.php?action=get_news");
         xhr_news.send(null);
     }
-    setTimeout("update_news();",60000);
+    setTimeout("update_news();",10000);
 }
 function update_stock_news(){
     var xhr=new XMLHttpRequest();
@@ -59,7 +59,7 @@ function update_stock_news(){
         xhr.open("GET","scripts/php/async_data.php?action=get_stock_news");
         xhr.send(null);
     }
-    setTimeout("update_stock_news();",10000);
+    setTimeout("update_stock_news();",5000);
 
 }
 </script>
