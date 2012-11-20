@@ -17,7 +17,7 @@ function company_onmouseover(cid){
 </script>
 <a class="btn btn-info" href="?tab=market">Set market as default page</a>
 <table><tr><td>
-<div class="row-fluid" style="width:400px;">
+<div class="row-fluid" style="width:300px;">
     <div class="well sidebar-nav">
         <ul class="nav nav-list">
             <? get_market_companies();?>

@@ -38,9 +38,9 @@ function get_companies(){
             echo $row2['location']."<br>";
         echo "<strong>News</strong><br>";
         $query3=mysqli_query($connect,"select news.*,addtime(news.time,gameconf.start_time) game_time from news,gameconf where (description like '%".$row['name']."%' or title like '%".$row['name']."%') and time<subtime(curtime(),gameconf.start_time)");
-        echo "<bloackquote>";
+        echo "<blockquote>";
         while($row2=mysqli_fetch_array($query3))
-            echo $row2['game_time'].": <strong>".$row2['title']."</strong><br>".$row2['description']."<br>";
+            echo $row2['game_time'].": <strong>".$row2['title']."</strong><br><div style='width:500px'>".$row2['description']."</div><br>";
         echo "</blockquote>";
         echo "</blockquote>";
         echo "<hr/>";
