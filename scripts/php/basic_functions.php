@@ -84,7 +84,7 @@ function get_market_companies(){
     include("connect.php");
     $query=mysqli_query($connect,"select cid,name from company order by name");
     while($row=mysqli_fetch_array($query))
-            echo "<li><a id='market_company_".$row['cid']."' rel='popover' data-content='Loading...' title='".$row['name']."' onmouseover='company_onmouseover(\"".$row['cid']."\");' href='#'>".$row['name']."</a></li>";
+            echo "<li><a id='market_company_".$row['cid']."' rel='popover' data-content='Loading...' title='".$row['name']."' onclick='get_market_company(".$row['cid'].");' onmouseover='company_onmouseover(\"".$row['cid']."\");' href='#'>".$row['name']."</a></li>";
 
 }
 function console_log($msg){

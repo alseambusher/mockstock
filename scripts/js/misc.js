@@ -40,6 +40,8 @@ function switch_window(id){
         $("#"+elements[i]).fadeOut(100);
         document.getElementById(elements[i]+"_button").setAttribute("class","");
     }
+    if(id=='market')
+        document.getElementById("market_company").innerHTML="";
     document.getElementById(id+"_button").setAttribute("class","active");
     $("#"+id).fadeIn(500);
 }

@@ -15,8 +15,10 @@ function get_news(){
     while($row=mysqli_fetch_array($query)){
         $title=htmlentities($row['title'],ENT_QUOTES);
         $description=htmlentities($row['description'],ENT_QUOTES);
-        array_push($result,$title);
-        array_push($result,$description);
+        if($description&&$title){
+            array_push($result,$title);
+            array_push($result,$description);
+        }
     }
     return json_encode($result);
 }

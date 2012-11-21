@@ -5,7 +5,8 @@ var stock_rates=['Company','10000',5.5]
 var stock_pointer=0;
 function news_parser(){
     $("#news_display").fadeOut(0);
-    document.getElementById("news_display").innerHTML="<strong>"+news[news_pointer%news.length]+"</strong>: "+news[(news_pointer+1)%news.length];
+    if(news[(news_pointer+1)%news.length]!=null)
+        document.getElementById("news_display").innerHTML="<strong>"+news[news_pointer%news.length]+"</strong>: "+news[(news_pointer+1)%news.length];
     $("#news_display").fadeIn(500);
     news_pointer=news_pointer+2;
     if(JSON.stringify(news)==JSON.stringify(['Loading','News']))

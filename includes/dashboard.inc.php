@@ -192,7 +192,7 @@ function global_worth_chart(){
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Global share',
                 data: global_worth_data,
             }],
             credits:{
