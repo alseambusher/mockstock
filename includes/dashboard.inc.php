@@ -9,6 +9,7 @@ function my_investments_chart(){
     my_investments= new Highcharts.Chart({
         chart: {
             renderTo: 'my_investments_chart',
+            zoomType: 'xy',
             type: 'line',
             marginRight: 130,
             marginBottom: 25
@@ -67,6 +68,7 @@ function all_investments_chart(){
     all_investments= new Highcharts.Chart({
         chart: {
             renderTo: 'all_investments_chart',
+            zoomType: 'xy',
             type: 'line',
             marginRight: 130,
             marginBottom: 25
@@ -115,16 +117,8 @@ function all_investments_chart(){
         }
     });
 }
+var my_worth_data=[['Loading',1]];
 function my_worth_chart(){
-    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
-            return {
-                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-                stops: [
-                    [0, color],
-                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-                ]
-            };
-    });
     var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'my_worth_pie',
@@ -136,7 +130,7 @@ function my_worth_chart(){
                 text: 'My Assets'
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                pointFormat: '{series.name}: <b>Rs.{point.y}</b>',
                 percentageDecimals: 1
             },
             plotOptions: {
@@ -148,28 +142,16 @@ function my_worth_chart(){
                         color: '#000000',
                         connectorColor: '#000000',
                         formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                            return this.point.name;
                         }
                     }
                 }
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
-                data: [
-                    ['Firefox',   45.0],
-                    ['IE',       26.8],
-                    {
-                        name: 'Chrome',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Safari',    8.5],
-                    ['Opera',     6.2],
-                    ['Others',   0.7]
-                ]
-            }],
+                name: 'Asset share',
+                data:  my_worth_data,
+                }],
             credits:{
                 enabled:false
             },
@@ -178,6 +160,7 @@ function my_worth_chart(){
             }
         });
 }
+var global_worth_data=[['Loading',1]];
 function global_worth_chart(){
     var chart = new Highcharts.Chart({
             chart: {
@@ -190,7 +173,7 @@ function global_worth_chart(){
                 text: 'Global Assets'
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                pointFormat: '{series.name}: <b>Rs.{point.y}</b>',
                 percentageDecimals: 1
             },
             plotOptions: {
@@ -202,7 +185,7 @@ function global_worth_chart(){
                         color: '#000000',
                         connectorColor: '#000000',
                         formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                            return this.point.name;
                         }
                     }
                 }
@@ -210,19 +193,7 @@ function global_worth_chart(){
             series: [{
                 type: 'pie',
                 name: 'Browser share',
-                data: [
-                    ['Firefox',   45.0],
-                    ['IE',       26.8],
-                    {
-                        name: 'Chrome',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Safari',    8.5],
-                    ['Opera',     6.2],
-                    ['Others',   0.7]
-                ]
+                data: global_worth_data,
             }],
             credits:{
                 enabled:false
@@ -286,7 +257,35 @@ function dashboard_update(){
         xhr_all_inverstments.open('GET','scripts/php/charts.php?chart=all_investments');
         xhr_all_inverstments.send(null);
     }
-    //TODO worth not implemented on async_data.php
+    //update my investments pie chart
+    var xhr_my_worth_chart=new XMLHttpRequest();
+    if(xhr_my_worth_chart){
+        xhr_my_worth_chart.onreadystatechange=function(){
+            if(xhr_my_worth_chart.readyState==4){
+                if(xhr_my_worth_chart.status==200){
+                    my_worth_data=eval(xhr_my_worth_chart.responseText);
+                    my_worth_chart();
+                }
+            }
+        }
+        xhr_my_worth_chart.open("GET","scripts/php/charts.php?chart=my_worth_chart");
+        xhr_my_worth_chart.send(null);
+    }
+    //update global asset pie chart
+    var xhr_global_worth_chart=new XMLHttpRequest();
+    if(xhr_global_worth_chart){
+        xhr_global_worth_chart.onreadystatechange=function(){
+            if(xhr_global_worth_chart.readyState==4){
+                if(xhr_global_worth_chart.status==200){
+                    global_worth_data=eval(xhr_global_worth_chart.responseText);
+                    global_worth_chart();
+                }
+            }
+        }
+        xhr_global_worth_chart.open("GET","scripts/php/charts.php?chart=global_worth_chart");
+        xhr_global_worth_chart.send(null);
+    }
+
     //update money with me and money invested
     var xhr_money_worth=new XMLHttpRequest();
     if(xhr_money_worth){
@@ -301,7 +300,7 @@ function dashboard_update(){
         xhr_money_worth.open("GET","scripts/php/async_data.php?action=my_cash");
         xhr_money_worth.send(null);
     }
-    setTimeout("dashboard_update();","5000");
+    setTimeout("dashboard_update();","10000");
 }
 </script>
 <div style="background-color:#dddddd;padding:10px;">

@@ -3,6 +3,8 @@ include("basic_functions.php");
 switch($_GET['chart']){
 case "my_investments":my_investments();break;
 case "all_investments":all_investments();break;
+case "my_worth_chart":my_worth_chart();break;
+case "global_worth_chart":global_worth_chart();break;
 }
 function my_investments(){
     if(isLogin()){
@@ -68,21 +70,33 @@ function all_investments(){
         echo $result_data;
     }
 }
-
-/*echo "[['1','2','3','4','5','6','7','8','9','10','11','12','13','14'],
-    [{
-                    name: 'Tokyo',
-                    data: [0.0, 0.9, 0.5, 4.5, 8.2, 1.5, 5.2, 6.5, 3.3, 8.3, 3.9, 0.6,1,0.3]
-                }, {
-                    name: 'New York',
-                    data: [0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5,10,1]
-                }, {
-                    name: 'Berlin',
-                    data: [1.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0,10,10.8]
-                }, {
-                    name: 'London',
-                    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8,10,5.6]
-                }]
-                ]";*/
-
+function my_worth_chart(){
+    if(isLogin()){
+        include("connect.php");
+        $query=mysqli_query($connect,"select owns_shares_of.no_of_shares*stock_record.price_per_share cash_invested,company.name from owns_shares_of,stock_record,gameconf,company where owns_shares_of.uid=".$_SESSION['uid']." and owns_shares_of.cid=stock_record.cid and company.cid=owns_shares_of.cid and addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00')");
+        $result="";
+        while($row=mysqli_fetch_array($query)){
+            $result=$result."['".$row['name']."',".$row['cash_invested']."],";
+        }
+        $query=mysqli_query($connect,"select money from users where uid=".$_SESSION['uid']);
+        while($row=mysqli_fetch_array($query))
+                $result=$result."['Cash in hand',".$row['money']."]";
+        echo "[".$result."]";
+    }
+}
+function global_worth_chart(){
+    if(isLogin()){
+        include("connect.php");
+        $query=mysqli_query($connect,"select company.no_shares*stock_record.price_per_share cash_invested,company.name from stock_record,gameconf,company where company.cid=stock_record.cid and addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00')");
+        $result="";
+        while($row=mysqli_fetch_array($query)){
+            if($result=="")
+                $result=$result."['".$row['name']."',".$row['cash_invested']."]";
+            else
+                $result=$result.",['".$row['name']."',".$row['cash_invested']."]";
+        }
+        $query=mysqli_query($connect,"select money from users where uid=".$_SESSION['uid']);
+        echo "[".$result."]";
+    }
+}
 ?>
