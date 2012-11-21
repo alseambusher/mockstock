@@ -29,6 +29,7 @@ function update_timer(){
 	}
 	if(cur_hour<0){
 		document.getElementById("timer").innerHTML='refresh page';
+        location.reload();
 		return;
 	}
 	document.getElementById("timer").innerHTML=_final;

@@ -87,4 +87,5 @@ function company_mouseover(){
         $result=$result."<br><strong>Price per share:</strong> ".$row['price_per_share'];
     echo $result;
 }
+
 ?>

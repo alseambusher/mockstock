@@ -303,10 +303,6 @@ function dashboard_update(){
     setTimeout("dashboard_update();","10000");
 }
 </script>
-<div style="background-color:#dddddd;padding:10px;">
-<h3>Cash in bank &nbsp;: <a id="my_cash">0</a> Rs<br>
-Cash invested: <a id="my_worth">0</a> Rs</h3>
-</div>
 <table class="table">
     <tr>
         <td><div id="all_investments_chart" style="width: 700px; height: 400px; margin-left: 0 "></div></td>

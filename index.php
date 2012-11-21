@@ -91,6 +91,10 @@
         </div>
     </div>
 <!-- make this async-->
+<div style="background-color:#dddddd;padding:10px;">
+<h3>Cash in bank &nbsp;: <a id="my_cash">0</a> Rs<br>
+Cash invested: <a id="my_worth">0</a> Rs</h3>
+</div><br>
     <div id="dashboard"><?include("includes/dashboard.inc.php");?></div>
     <div id="market"><?include("includes/market.inc.php");?></div>
     <div id="companies"><?include("includes/companies.inc.php");?></div>

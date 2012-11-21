@@ -5,6 +5,7 @@ case "my_investments":my_investments();break;
 case "all_investments":all_investments();break;
 case "my_worth_chart":my_worth_chart();break;
 case "global_worth_chart":global_worth_chart();break;
+case "get_market_company":get_market_company();break;
 }
 function my_investments(){
     if(isLogin()){
@@ -70,6 +71,7 @@ function all_investments(){
         echo $result_data;
     }
 }
+
 function my_worth_chart(){
     if(isLogin()){
         include("connect.php");
@@ -99,4 +101,27 @@ function global_worth_chart(){
         echo "[".$result."]";
     }
 }
+function get_market_company(){
+    if(isLogin()){
+        include("connect.php");
+        $query=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$_GET['cid']);
+        $data_count=0;//has the number of elements in y-axis
+        $result_data="{name:'Price per share', data:[";
+        while($row=mysqli_fetch_array($query)){
+            $result_data=$result_data.$row['price_per_share'].',';
+            $data_count=$data_count+1;
+        }
+        substr_replace($result_data,"",-1);//remove , in the end
+        $result_data=$result_data."]} ";
+        $result_data='['.$result_data.']';
+        $y_axis="[";
+        for($i=0;$i<$data_count;$i++)
+            $y_axis=$y_axis."'".$i."',";
+        substr_replace($y_axis,"",-1);//remove , in the end
+        $y_axis=$y_axis."]";
+        $result_data='['.$y_axis.",".$result_data.']';
+        echo $result_data;
+    }
+}
+
 ?>
