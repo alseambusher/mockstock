@@ -13,8 +13,8 @@ function get_news(){
     $query=mysqli_query($connect,"select news.* from news,gameconf where addtime(gameconf.start_time,news.time)<curtime() and addtime(gameconf.start_time,news.time)>subtime(curtime(),'00:05:00')");
     $result=array();
     while($row=mysqli_fetch_array($query)){
-        $title=htmlentities($row['title']);
-        $description=htmlentities($row['description']);
+        $title=htmlentities($row['title'],ENT_QUOTES);
+        $description=htmlentities($row['description'],ENT_QUOTES);
         array_push($result,$title);
         array_push($result,$description);
     }
@@ -37,7 +37,7 @@ function get_companies(){
         while($row2=mysqli_fetch_array($query2))
             echo $row2['location']."<br>";
         echo "<strong>News</strong><br>";
-        $query3=mysqli_query($connect,"select news.*,addtime(news.time,gameconf.start_time) game_time from news,gameconf where (description like '%".$row['name']."%' or title like '%".$row['name']."%') and time<subtime(curtime(),gameconf.start_time)");
+        $query3=mysqli_query($connect,"select news.*,addtime(news.time,gameconf.start_time) game_time from news,gameconf where (description like '%".$row['name']."%' or title like '%".$row['name']."%') and time<subtime(curtime(),gameconf.start_time) order by game_time desc limit 3");
         echo "<blockquote>";
         while($row2=mysqli_fetch_array($query3))
             echo $row2['game_time'].": <strong>".$row2['title']."</strong><br><div style='width:500px'>".$row2['description']."</div><br>";

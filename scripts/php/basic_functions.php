@@ -49,9 +49,10 @@ function get_user_data($column_array,$uid=-1){
     if(isLogin()&&$uid==-1)
 		$uid=$_SESSION['uid'];
 	include("connect.php");
-	$query=mysqli_query($connect,"select ".$columns." from users where uid='".$uid."'");
-	while($row=mysqli_fetch_array($query))
-		return $row;
+    $query=mysqli_query($connect,"select ".$columns." from users where uid='".$uid."'");
+    while($row=mysqli_fetch_array($query)){
+        return $row;
+    }
 	return -1;
 }
 function game_started(){

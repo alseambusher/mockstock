@@ -94,7 +94,7 @@ function logout(){
 function update(){
 	if(isLogin()){
         include("connect.php");
-        $defult=get_user_data(Array("first_name","last_name","email","password"));
+        $default=get_user_data(Array("first_name","last_name","email","password"));
         if(!isset($_POST['first_name'])||($_POST['first_name']==""))//first name no change
             $first_name=$default['first_name'];
 		else
@@ -106,7 +106,7 @@ function update(){
 			$last_name=sql_inject_clean($_POST['last_name']);
 
 		if(!isset($_POST['email'])||($_POST['email']=="")){//email name no change
-            $email=$default['email'];
+           $email=$default['email'];
 		}
 		else{
 			$email=sql_inject_clean($_POST['email']);
@@ -116,7 +116,7 @@ function update(){
 			}
 		}
 
-        if(!isset($_POST['password'])||($_POST['password']=="")){//email name no change
+        if((!isset($_POST['password']))||($_POST['password']=="")){//email name no change
             $password=$default['password'];
 		}
 		else{
@@ -132,8 +132,8 @@ function update(){
 			}
 		}
 		$query=mysqli_query($connect,"update users set first_name='".$first_name."',last_name='".$last_name."',password='".$password."',email='".$email."' where uid='".$_SESSION['uid']."'");
-			header("Location:".$config['base_url']."/?message_head=Update Successful&message=Update Complete..");
-	}
+        header("Location:".$config['base_url']."/?message_head=Update Successful&message=Update Complete..");
+    }
 }
 function account_settings(){
 	if(isLogin()){

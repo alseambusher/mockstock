@@ -57,6 +57,64 @@ function my_investments_chart(){
         }
     });
 }
+var all_investments;
+var all_investments_data=[{
+            name:"initial",
+            data:[0.0]
+}];
+var all_investments_categories=['Loading'];
+function all_investments_chart(){
+    all_investments= new Highcharts.Chart({
+        chart: {
+            renderTo: 'all_investments_chart',
+            type: 'line',
+            marginRight: 130,
+            marginBottom: 25
+        },
+        credits:{
+            enabled:false
+        },
+        title: {
+            text: 'All Companies',
+            x: -20 //center
+        },
+        subtitle: {
+            text: 'Price per share of all Companies',
+            x: -20
+        },
+        xAxis: {
+            categories: all_investments_categories
+        },
+        yAxis: {
+            title: {
+                text: 'Price per Share'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                    this.x +': '+ this.y +' Rs';
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -10,
+            y: 100,
+            borderWidth: 0
+        },
+        series:all_investments_data,
+        exporting: {
+            enabled: false
+        }
+    });
+}
 function my_worth_chart(){
     Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
             return {
@@ -66,7 +124,7 @@ function my_worth_chart(){
                     [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
                 ]
             };
-        });
+    });
     var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'my_worth_pie',
@@ -176,9 +234,6 @@ function global_worth_chart(){
 }
 
 function dashboard_update(){
-    //TODO
-    //make a async request too charts.php and update data
-    //my_investments.showLoading();
     var xhr_my_inverstments=new XMLHttpRequest();
     //update my_investment graph
     if(xhr_my_inverstments){
@@ -205,6 +260,32 @@ function dashboard_update(){
         xhr_my_inverstments.open('GET','scripts/php/charts.php?chart=my_investments');
         xhr_my_inverstments.send(null);
     }
+    var xhr_all_inverstments=new XMLHttpRequest();
+    //update my_investment graph
+    if(xhr_all_inverstments){
+        xhr_all_inverstments.onreadystatechange=function(){
+            if(xhr_all_inverstments.readyState==4){
+                if(xhr_all_inverstments.status==200){
+                    all_investments_data=eval(xhr_all_inverstments.responseText)[1];
+                    all_investments_categories=eval(xhr_all_inverstments.responseText)[0];
+                    all_investments_chart();
+                    document.getElementById("all_investments_table").innerHTML="<tr><th>Company</th><th>Price per Share</th></tr>";
+                    for(var i=0;i<all_investments_data.length;i++){
+                        var tr=document.createElement("tr");
+                        var td=document.createElement("td");
+                        td.innerHTML=all_investments_data[i].name;
+                        var td2=document.createElement("td");
+                        td2.innerHTML=all_investments_data[i].data[all_investments_data[i].data.length-1];
+                        tr.appendChild(td);
+                        tr.appendChild(td2);
+                        document.getElementById("all_investments_table").appendChild(tr);
+                    }
+                }
+            }
+        }
+        xhr_all_inverstments.open('GET','scripts/php/charts.php?chart=all_investments');
+        xhr_all_inverstments.send(null);
+    }
     //TODO worth not implemented on async_data.php
     //update money with me and money invested
     var xhr_money_worth=new XMLHttpRequest();
@@ -220,7 +301,7 @@ function dashboard_update(){
         xhr_money_worth.open("GET","scripts/php/async_data.php?action=my_cash");
         xhr_money_worth.send(null);
     }
-    setTimeout("dashboard_update();","20000");
+    setTimeout("dashboard_update();","5000");
 }
 </script>
 <div style="background-color:#dddddd;padding:10px;">
@@ -229,7 +310,15 @@ Cash invested: <a id="my_worth">0</a> Rs</h3>
 </div>
 <table class="table">
     <tr>
-        <td><div id="my_investments_chart" style="width: 800px; height: 400px; margin-left: 0 "></div></td>
+        <td><div id="all_investments_chart" style="width: 700px; height: 400px; margin-left: 0 "></div></td>
+        <td >
+            <table class="table" id="all_investments_table" >
+                <tr><th>Company</th><th>Price per Share</th></tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td><div id="my_investments_chart" style="width: 700px; height: 400px; margin-left: 0 "></div></td>
         <td >
             <table class="table" id="investments_table" >
                 <tr><th>Company</th><th>Price per Share</th></tr>
