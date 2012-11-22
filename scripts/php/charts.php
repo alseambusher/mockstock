@@ -17,7 +17,7 @@ function my_investments(){
                 $result_data=$result_data."{ ";
             else
                 $result_data=$result_data.",{ ";
-            $query2=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$row['cid']);
+            $query2=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$row['cid']." order by time");
             $data_count=0;//has the number of elements in y-axis
             $result_data=$result_data."name:'".$row['name']."', data:[";
             while($row2=mysqli_fetch_array($query2)){
@@ -49,7 +49,7 @@ function all_investments(){
                 $result_data=$result_data."{ ";
             else
                 $result_data=$result_data.",{ ";
-            $query2=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$row['cid']);
+            $query2=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$row['cid']." order by time");
             $data_count=0;//has the number of elements in y-axis
             $result_data=$result_data."name:'".$row['name']."', data:[";
             while($row2=mysqli_fetch_array($query2)){
@@ -104,7 +104,7 @@ function global_worth_chart(){
 function get_market_company(){
     if(isLogin()){
         include("connect.php");
-        $query=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$_GET['cid']);
+        $query=mysqli_query($connect,"select stock_record.price_per_share from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and cid=".$_GET['cid']." order by time");
         $data_count=0;//has the number of elements in y-axis
         $result_data="{name:'Price per share', data:[";
         while($row=mysqli_fetch_array($query)){

@@ -98,6 +98,13 @@ end
 alter event speedup_news disable;
 alter event speedup_news enable;
 
+--event to delete useless data in owns_shares_of
+create event update_owns_shares_of
+on schedule every 5 second
+do begin
+    delete from owns_shares_of where no_of_shares=0;
+end
+
 
 --procedure to recover news from news_history
 create procedure recover_news()
@@ -130,7 +137,7 @@ begin
     if curtime()<addtime(fetch_time,'00:05:00') then
         select stock_record.price_per_share as new_price,0 as percent,company.name from gameconf,stock_record inner join company on company.cid=stock_record.cid where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00');
     else
-        select new.price_per_share new_price,((old.price_per_share-new.price_per_share)/old.price_per_share)*100 as percent ,company.name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid ;
+        select new.price_per_share new_price,((new.price_per_share-old.price_per_share)/old.price_per_share)*100 as percent ,company.name from (select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<curtime() and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:05:00')) as new,(select stock_record.price_per_share,stock_record.cid from stock_record,gameconf where addtime(gameconf.start_time,stock_record.time)<subtime(curtime(),'00:05:00')and addtime(gameconf.start_time,stock_record.time)>subtime(curtime(),'00:10:00')) as old inner join company on old.cid=company.cid where new.cid=old.cid ;
     end if;
 end
 //
@@ -147,20 +154,27 @@ create trigger transaction after insert on buy_sell
         begin
         declare already_owned_cid int;
         declare cost_involved int;
-        select (new.no_of_shares*stock_record.price_per_share) into cost_involved from stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00');
+        declare total_shares int;
+        declare begin_time time;
+        select start_time into begin_time from gameconf;
+        select no_shares into total_shares from company where cid=new.cid;
+        select (new.no_of_shares*stock_record.price_per_share) into cost_involved from stock_record,gameconf where addtime(stock_record.time,gameconf.start_time)<curtime() and addtime(stock_record.time,gameconf.start_time)>subtime(curtime(),'00:05:00') and stock_record.cid=new.cid;
         select cid into already_owned_cid from owns_shares_of where cid=new.cid and uid=new.uid;
         if already_owned_cid is not null
             then
                 if new.isbuy=0 then
                     update owns_shares_of set no_of_shares=no_of_shares-new.no_of_shares where owns_shares_of.uid=new.uid and owns_shares_of.cid=new.cid;
                     update users set money=money+cost_involved where uid=new.uid;
+                    update stock_record set price_per_share=price_per_share*(1+(new.no_of_shares/total_shares)) where cid=new.cid and addtime(time,'00:05:00')>subtime(curtime(),begin_time);
                 else
                     update owns_shares_of set no_of_shares=no_of_shares+new.no_of_shares where owns_shares_of.uid=new.uid and owns_shares_of.cid=new.cid;
                     update users set money=money-cost_involved where uid=new.uid;
+                    update stock_record set price_per_share=price_per_share*(1-(new.no_of_shares/total_shares)) where cid=new.cid and addtime(time,'00:05:00')>subtime(curtime(),begin_time);
                 end if;
             else
                 insert into owns_shares_of values(new.uid,new.cid,new.no_of_shares);
                 update users set money=money-cost_involved where uid=new.uid;
+                update stock_record set price_per_share=price_per_share*(1+(new.no_of_shares/total_shares)) where cid=new.cid and addtime(time,'00:05:00')>subtime(curtime(),begin_time);
         end if;
     end;
 //

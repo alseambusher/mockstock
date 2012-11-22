@@ -1,5 +1,6 @@
 //this has all the onload functions
 window.onload=function(){
+    ranks();
     Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
             return {
                 radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
@@ -17,7 +18,6 @@ window.onload=function(){
     news_parser();
     stock_rates_parser();
     update_stock_news();
-    ranks();
     switch_window(document.getElementById("url_tab").value);
     filter_company();
 }

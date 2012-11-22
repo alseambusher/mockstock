@@ -49,7 +49,7 @@
               <ul class="dropdown-menu">
 <?$user=get_user_data(Array('first_name','last_name','email'));?>
 <li><a href="#"onclick='load_form_modal("Account settings","scripts/php/accounts.php?action=update","<input name=\"first_name\" type=\"text\" placeholder=\"First Name\" value=\"<?echo $user['first_name'];?>\"/> eg: John<br><input name=\"last_name\" type=\"text\" placeholder=\"Last Name\"value=\"<?echo $user['last_name'];?>\"/> eg: Smith<br><input name=\"email\" type=\"text\" placeholder=\"email\"value=\"<?echo $user['email'];?>\"/> eg: john@example.com<br><input name=\"password\"type=\"password\" placeholder=\"password\"/> Password should have a minimum of 6 characters<br><input name=\"confirm_password\"type=\"password\" placeholder=\"confirm password\"/><br>","Update");'>Account settings</a></li>
-                <li><a href="#">Help</a></li>
+                <li><a href="help.php">Help</a></li>
                 <li><a href="scripts/php/accounts.php?action=logout">Logout</a></li>
               </ul>
             </li>
@@ -73,6 +73,8 @@
             <?if($time_status['game_status']!="Game Over"){
                 echo '<a id="timer">'.$time_status['time'].'</a>';
                 echo '<script>setTimeout("update_timer()",0);</script>';
+            }else{
+                echo '<br><a href="rank.php">Click to see rank</a>';
             }?>
         </h1>
     </center>

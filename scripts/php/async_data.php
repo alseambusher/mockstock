@@ -7,6 +7,7 @@ case "get_companies":get_companies();break;
 case "rank_table": return rank_table();break;
 case "get_stock_news":get_stock_news();break;
 case "company_mouseover":company_mouseover();break;
+case "rank_game_over":rank_game_over();break;
 }
 function get_news(){
     include("connect.php");
@@ -51,6 +52,18 @@ function get_companies(){
 function rank_table(){
     include("connect.php");
     $query=mysqli_query($connect,"select * from ranking");
+    $rank=1;
+    echo '<table class="table">
+            <tr><th>Rank</th><th>Player</th><th>Cash in Hand</th><th>Cash invested</th><th>Total</th></tr>';
+    while($row=mysqli_fetch_array($query)){
+        echo "<tr><td>".$rank."</td><td>".$row['full_name']."</td><td>".$row['cash_in_hand']."</td><td>".$row['cash_invested']."</td><td>".$row['total']."</td></tr>";
+        $rank=$rank+1;
+    }
+    echo '</table>';
+}
+function rank_game_over(){
+    include("connect.php");
+    $query=mysqli_query($connect,"select users.money cash_in_hand,sum(owns_shares_of.no_of_shares*stock_record.price_per_share) cash_invested,sum(owns_shares_of.no_of_shares*stock_record.price_per_share)+users.money as total, concat(users.first_name,' ',users.last_name) as full_name from owns_shares_of,stock_record,gameconf,users where stock_record.time in (select stock_record.time from stock_record) and owns_shares_of.cid=stock_record.cid and owns_shares_of.uid=users.uid group by users.uid order by total desc");
     $rank=1;
     echo '<table class="table">
             <tr><th>Rank</th><th>Player</th><th>Cash in Hand</th><th>Cash invested</th><th>Total</th></tr>';
