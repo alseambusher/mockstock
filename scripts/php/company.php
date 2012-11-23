@@ -67,7 +67,7 @@ function sell(){
         $no_shares=10000000;
         while($row=mysqli_fetch_array($query))
             $no_shares=$row['no_of_shares'];
-        if(($no_shares==-1)||($no_shares<$_POST['num_shares'])){
+        if(($no_shares==10000000)||($no_shares<$_POST['num_shares'])){
             header("Location:".$config['base_url']."/?error=You dont have enough shares to sell, Transaction failed. ");
             return;
         }

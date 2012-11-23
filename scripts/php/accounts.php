@@ -39,10 +39,10 @@ function signup(){
 			header("Location:".$config['base_url']."/?error=First name cant be left empty");
 			return;
 		}
-		else if(get_user_id(sql_inject_clean($_POST["user_name"]))!=-1){//username already exists
+		/*else if(get_user_id(sql_inject_clean($_POST["user_name"]))!=-1){//username already exists
 			header("Location:".$config['base_url']."/?error=User name already exists");
 			return;
-		}
+        }*/
 		//email
 		else if($_POST["email"]==""){
 			header("Location:".$config['base_url']."/?error=email cant be left empty");
