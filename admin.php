@@ -62,7 +62,7 @@
         </script>
 <?
 if(isset($_POST['game_time'])&&isset($_POST['admin_pass'])){
-    $connect=mysqli_connect("localhost","root","alse","mockstock");
+    $connect=mysqli_connect($config['db_host'],$config['db_username'],$config['db_password'],$config['db_database']);
     $query=mysqli_query($connect,"select * from gameconf where password='".$_POST['admin_pass']."'")or die("cant connect");
     while($row=mysqli_fetch_array($query)){
         $query2=mysqli_query($connect,"update gameconf set start_time='".$_POST['game_time']."'")or die("cant update");
@@ -72,7 +72,7 @@ if(isset($_POST['game_time'])&&isset($_POST['admin_pass'])){
 <?if(!game_started()){?>
 <h2>Start game</h2>
 <?
-    $connect=mysqli_connect("localhost","root","alse","mockstock");
+    $connect=mysqli_connect($config['db_host'],$config['db_username'],$config['db_password'],$config['db_database']);
 $query=mysqli_query($connect,"select start_time from gameconf");
 while($row=mysqli_fetch_array($query))
     echo $row['start_time']."<br>";
