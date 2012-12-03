@@ -18,18 +18,7 @@ background-color:#999999;
 </style>
 
 <body>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="container" >
+<div class="container" style="padding-bottom:300px;margin-top:20px;">
 <h1>Mockstock Help</h1><br>
 Mock stock is an online stock trading game played with virtual money.<br>
 The aim of the player is to maximize profit at the end of the game.<br>
